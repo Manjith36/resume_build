@@ -68,22 +68,75 @@ export interface AppState {
 // ─── Defaults ────────────────────────────────────────────────────────
 
 export const emptyPersonalInfo: PersonalInfo = {
-  fullName: '',
-  email: '',
-  phone: '',
-  location: '',
-  linkedinUrl: '',
-  portfolioUrl: '',
+  fullName: 'Jane Doe',
+  email: 'jane.doe@example.com',
+  phone: '(555) 123-4567',
+  location: 'San Francisco, CA',
+  linkedinUrl: 'linkedin.com/in/janedoe',
+  portfolioUrl: 'janedoe.dev',
 };
 
 export const emptyResumeData: ResumeData = {
   personalInfo: { ...emptyPersonalInfo },
-  summary: '',
-  experience: [],
-  projects: [],
-  education: [],
-  certifications: [],
-  skills: [],
+  summary: 'Passionate and results-driven Software Engineer with 5+ years of experience in designing and developing scalable web applications. Proven ability to lead full-stack teams, optimize performance, and deliver robust software solutions that drive business growth.',
+  experience: [
+    {
+      id: 'exp-example-1',
+      role: 'Senior Software Engineer',
+      company: 'Tech Solutions Inc.',
+      startDate: '2021-03',
+      endDate: null,
+      isPresent: true,
+      description: '• Spearheaded the migration of a legacy monolithic architecture to highly scalable microservices using Node.js and Docker, reducing latency by 40%.\n• Mentored a team of 4 junior developers and established CI/CD best practices.\n• Improved database query performance by 60% through aggressive indexing and caching strategies.',
+    },
+    {
+      id: 'exp-example-2',
+      role: 'Full Stack Developer',
+      company: 'Creative Digital Agency',
+      startDate: '2018-06',
+      endDate: '2021-02',
+      isPresent: false,
+      description: '• Developed and deployed over 15 dynamic web applications for high-profile clients using React and TypeScript.\n• Collaborated closely with UI/UX designers to translate complex wireframes into responsive, accessible interfaces.\n• Implemented automated end-to-end testing, increasing test coverage to 85%.',
+    }
+  ],
+  projects: [
+    {
+      id: 'proj-example-1',
+      title: 'Open Source E-Commerce Platform',
+      description: 'A fully open-source headless e-commerce solution that supports thousands of concurrent users. Features real-time inventory tracking and secure payment gateway integration.',
+      technologies: 'Next.js, Tailwind CSS, Stripe API, PostgreSQL',
+      url: 'github.com/janedoe/ecommerce',
+      startDate: '2022-01',
+      endDate: '2022-08',
+      isPresent: false,
+    }
+  ],
+  education: [
+    {
+      id: 'edu-example-1',
+      degree: 'B.S. in Computer Science',
+      institution: 'University of Technology',
+      startDate: '2014-09',
+      endDate: '2018-05',
+      isPresent: false,
+    }
+  ],
+  certifications: [
+    {
+      id: 'cert-example-1',
+      name: 'AWS Certified Solutions Architect – Associate',
+      issuer: 'Amazon Web Services',
+      date: '2023-11',
+      credentialUrl: '',
+      credentialId: 'AWS-12345678',
+    }
+  ],
+  skills: [
+    'Frontend (React, Vue, TypeScript, Tailwind CSS)',
+    'Backend (Node.js, Python, PostgreSQL, Redis)',
+    'DevOps (Docker, Kubernetes, AWS, CI/CD)',
+    'System Architecture & API Design',
+  ],
 };
 
 export const defaultAppState: AppState = {

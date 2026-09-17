@@ -33,6 +33,23 @@
   --color-success-500: #22c55e;
 }
 
+/* ─── Light Mode Overrides ──────────────────────────────────────────── */
+.light {
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #475569;
+
+  --color-border: #cbd5e1;
+  --color-border-focus: #4f46e5;
+}
+
 /* ─── Base Styles ───────────────────────────────────────────────────── */
 * {
   margin: 0;

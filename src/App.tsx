@@ -127,6 +127,72 @@ function PreviewPanel() {
   );
 }
 
+// ─── Theme Toggle ─────────────────────────────────────────────────────
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved as 'light' | 'dark';
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  });
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light');
+    } else {
+      document.body.classList.remove('light');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  return (
+    <button
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+        background: 'var(--color-surface-200)',
+        border: '1px solid var(--color-border)',
+        color: 'var(--color-text-primary)',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+      }}
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
+      {theme === 'light' ? '🌙' : '☀️'}
+    </button>
+  );
+}
+
+// ─── Reset Button ─────────────────────────────────────────────────────
+
+function ResetButton() {
+  const { dispatch } = useResume();
+  
+  return (
+    <button
+      onClick={() => {
+        if (confirm('This will clear your current resume and load example details. Continue?')) {
+          dispatch({ type: 'RESET' });
+        }
+      }}
+      className="btn-danger"
+      title="Load Example Data"
+      style={{ padding: '6px 12px' }}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </svg>
+      Load Example
+    </button>
+  );
+}
+
 // ─── App Layout ─────────────────────────────────────────────────────
 
 function AppContent() {
@@ -166,20 +232,24 @@ function AppContent() {
                 </p>
               </div>
             </div>
-            <div style={{
-              fontSize: 11,
-              color: 'var(--color-text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-            }}>
+            <div className="flex items-center gap-6">
               <div style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                backgroundColor: 'var(--color-success-500)',
-              }} />
-              Auto-saved
+                fontSize: 11,
+                color: 'var(--color-text-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}>
+                <div style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--color-success-500)',
+                }} />
+                Auto-saved
+              </div>
+              <ResetButton />
+              <ThemeToggle />
             </div>
           </div>
         </div>

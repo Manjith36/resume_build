@@ -7,6 +7,7 @@ import ModernTemplate from './components/templates/ModernTemplate';
 import MinimalTemplate from './components/templates/MinimalTemplate';
 import BoldTemplate from './components/templates/BoldTemplate';
 import { usePdfExport } from './hooks/usePdfExport';
+import { usePagination } from './hooks/usePagination';
 
 // ─── Template Renderer ──────────────────────────────────────────────
 
@@ -31,7 +32,7 @@ function TemplateRenderer() {
 // ─── Preview Panel ──────────────────────────────────────────────────
 
 function PreviewPanel() {
-  const previewRef = useRef<HTMLDivElement>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { exportPdf, isExporting } = usePdfExport();
   const { state } = useResume();
@@ -53,11 +54,14 @@ function PreviewPanel() {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
+  // Measure export container to determine number of pages, and inject margins to prevent slicing
+  const numPages = usePagination(exportRef, [state]);
+
   const handleExport = async () => {
     const filename = state.resumeData.personalInfo.fullName
       ? `${state.resumeData.personalInfo.fullName.replace(/\s+/g, '_')}_Resume.pdf`
       : 'Resume.pdf';
-    await exportPdf(previewRef, filename);
+    await exportPdf(exportRef, filename);
   };
 
   return (
@@ -89,15 +93,31 @@ function PreviewPanel() {
         </button>
       </div>
 
-      {/* Preview container */}
+      {/* Unified Preview & Export Container */}
       <div ref={containerRef} className="preview-container">
-        <div className="preview-scroll" style={{ padding: 16 }}>
+        <div className="preview-scroll" style={{ padding: '32px 16px', backgroundColor: 'var(--color-surface-100)' }}>
           <div style={{
             transform: `scale(${scale})`,
-            transformOrigin: 'top left',
+            transformOrigin: 'top center',
             width: 794,
+            margin: '0 auto',
+            position: 'relative',
+            // This mask creates a 24px transparent gap every 1123px, simulating physical pages
+            WebkitMaskImage: 'repeating-linear-gradient(to bottom, black 0px, black 1123px, transparent 1123px, transparent 1147px)',
+            maskImage: 'repeating-linear-gradient(to bottom, black 0px, black 1123px, transparent 1123px, transparent 1147px)',
+            // Drop shadow applies to the unmasked areas (the physical pages!)
+            filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.15))',
+            paddingBottom: 24, // extra padding so the last page shadow isn't clipped
           }}>
-            <div ref={previewRef} style={{ width: 794 }}>
+            {/* The actual resume DOM, which usePagination mutates to add margins */}
+            <div 
+              ref={exportRef} 
+              style={{ 
+                width: 794, 
+                backgroundColor: 'white', 
+                minHeight: numPages * 1123,
+              }}
+            >
               <TemplateRenderer />
             </div>
           </div>
@@ -167,34 +187,39 @@ function AppContent() {
 
       {/* Main Content */}
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Template Selector */}
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: 'var(--color-text-secondary)',
-            marginBottom: 12,
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-          }}>
-            Choose Template
-          </h2>
-          <TemplateSelector />
-        </div>
-
         {/* Form + Preview Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Form Panel */}
+          
+          {/* Left Column: Template Selector & Form */}
           <div style={{
-            maxHeight: 'calc(100vh - 220px)',
+            maxHeight: 'calc(100vh - 120px)',
             overflowY: 'auto',
             paddingRight: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 24,
           }}>
+            {/* Template Selector (moved to left column) */}
+            <div>
+              <h2 style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                marginBottom: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}>
+                Choose Template
+              </h2>
+              <TemplateSelector />
+            </div>
+            
+            {/* Resume Form */}
             <ResumeForm />
           </div>
 
-          {/* Preview Panel */}
-          <div>
+          {/* Right Column: Preview Panel */}
+          <div className="sticky top-6 h-[calc(100vh-140px)]">
             <PreviewPanel />
           </div>
         </div>

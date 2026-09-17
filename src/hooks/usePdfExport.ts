@@ -51,6 +51,7 @@ export function usePdfExport() {
               format: 'a4',
               orientation: 'portrait' as const,
             },
+            // @ts-expect-error html2pdf.js types are missing pagebreak property but it exists in the library
             pagebreak: {
               mode: ['css', 'legacy'],
             },

@@ -67,7 +67,7 @@ function PreviewPanel() {
   return (
     <div className="flex flex-col gap-4">
       {/* Export button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end" style={{ marginRight: '40px', marginTop: '12px' }}>
         <button
           className="btn-export"
           onClick={handleExport}
@@ -232,7 +232,7 @@ function AppContent() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6" style={{ marginRight: '40px' }}>
               <div style={{
                 fontSize: 11,
                 color: 'var(--color-text-muted)',
@@ -289,7 +289,7 @@ function AppContent() {
           </div>
 
           {/* Right Column: Preview Panel */}
-          <div className="sticky top-6 h-[calc(100vh-140px)]">
+          <div className="sticky top-6 h-[calc(100vh-100px)]">
             <PreviewPanel />
           </div>
         </div>
